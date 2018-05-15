@@ -19,7 +19,6 @@ def print_mimesis(provider=None):
 
 
 def print_unique(provider=None, method=None, local=None, max=1000):
-    generic = Generic(local)
     data = create_data(max_unique=max, local=local, provider=provider, method=method)
     for k, v in data.items():
         print("{:=^80}".format(k.center(len(k)+2)))
@@ -30,26 +29,28 @@ def create_data(local=None, provider=None, method=None, max_unique=100):
     generic = Generic(local)
     data={}
     for c in dir(generic):
-        data[c]={}
-        for cc in inspect.getmembers(getattr(generic,c), predicate=inspect.ismethod):
-            if not cc[0].startswith("_"):
-                d=set([])
-                max_tries=100
-                a = 0
-                try:
-                    while len(d)<max_unique:
-                        value = cc[1]()
-                        if value not in d:
-                            d.add(value)
-                            a=0
-                        else:
-                            a += 1
-                        if a > max_tries:
-                            break
+        if not provider or provider == c:
+            data[c]={}
+            for cc in inspect.getmembers(getattr(generic,c), predicate=inspect.ismethod):
+                if not cc[0].startswith("_"):
+                    if not method or method == cc[0]:
+                        d=set([])
+                        max_tries=100
+                        a = 0
+                        try:
+                            while len(d)<max_unique:
+                                value = cc[1]()
+                                if value not in d:
+                                    d.add(value)
+                                    a=0
+                                else:
+                                    a += 1
+                                if a > max_tries:
+                                    break
 
-                except Exception:
-                    pass
-                data[c][cc[0]]=len(d)
+                        except Exception:
+                            pass
+                        data[c][cc[0]]=len(d)
     return data
 
 def print_providers(data=None, local=None, max_unqiue=10000, only_max=False):

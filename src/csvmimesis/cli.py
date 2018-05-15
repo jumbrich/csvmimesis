@@ -44,7 +44,13 @@ def list_all(provider):
 @click.option("-l","--local", default=None)
 @click.option("--max", default=1000, type=int)
 def unique(provider, method, local, max):
-    click.echo("Number of unique values for each providers and methods (max_unique={} )".format(max))
+    if provider:
+        if method:
+            click.echo("Number of unique values for provider [{}] and methods (max_unique={} )".format(provider,max))
+        else:
+            click.echo("Number of unique values for provider [{}] and method [{}] (max_unique={} )".format(provider, method, max))
+    else:
+        click.echo("Number of unique values for each providers and methods (max_unique={} )".format(max))
     print_unique(provider=provider, method=method, local=local, max=max)
 
 @main.command()

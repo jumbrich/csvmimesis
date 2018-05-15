@@ -80,7 +80,7 @@ def create_data_provider_list(providers, size,  max_tries=100, local=None):
         data[p_name] = create_data_single_provider(p, size, uniquness=u, max_tries=max_tries)
     return header, data
 
-def create_data_single_provider(provider, size, uniquness=1, max_tries=100):
+def create_data_single_provider(provider, size, uniquness=1, max_tries=1000):
     log.debug("Create %s items from %s", size, provider)
     if uniquness is None:
         return [provider() for i in range(0,size)]
@@ -97,7 +97,7 @@ def create_data_single_provider(provider, size, uniquness=1, max_tries=100):
             if value not in uniq:
                 break
             if c > max_tries:
-                raise Exception("Could not create another unqiue value")
+                raise Exception("Could not create another unqiue value for {}".format(provider))
         uniq.add(value)
         data.append(value)
 
