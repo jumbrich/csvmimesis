@@ -6,7 +6,7 @@ try:
     dist_name = __name__
     __version__ = get_distribution(dist_name).version
 except DistributionNotFound:
-    __version__ = 'unknown'
+    __version__ = '0.1.0'
 
 
 import logging
