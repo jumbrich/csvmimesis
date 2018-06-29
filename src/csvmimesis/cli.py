@@ -9,7 +9,7 @@ import logging
 import json
 
 from csvmimesis import __version__
-from csvmimesis.mimesis_data_providers import print_mimesis,print_unique
+from csvmimesis.mimesis_data_providers import print_mimesis,print_unique, print_locals
 from csvmimesis.table_generator import create_table, write_table,print_table, write_tables,create_table_pair,print_tables
 
 __author__ = "jumbrich"
@@ -30,6 +30,11 @@ def main(verbose):
         logging.basicConfig(level=logging.INFO)
     if verbose == 2:
         logging.basicConfig(level=logging.DEBUG)
+
+@main.command()
+def list_locals():
+    click.echo("Available locals")
+    print_locals()
 
 
 @main.command()
@@ -122,11 +127,8 @@ def table_pairs(template, dir, print):
         if print:
             print_tables(_tables)
 
-        dir = os.path.join(dir,tp['prefix'])
-        write_tables(_tables, dir=dir, prefix=tp['prefix'])
-
-
-
+        _dir = os.path.join(dir,tp['prefix'])
+        write_tables(_tables, dir=_dir, prefix=tp['prefix'])
 
 if __name__ == "__main__":
     sys.exit(main())  # pragma: no cover
